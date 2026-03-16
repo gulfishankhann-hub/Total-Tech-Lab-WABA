@@ -9,10 +9,10 @@ export default defineConfig(({mode}) => {
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'import.meta.env.VITE_META_ACCESS_TOKEN': JSON.stringify(env.META_ACCESS_TOKEN),
-      'import.meta.env.VITE_META_PHONE_NUMBER_ID': JSON.stringify(env.META_PHONE_NUMBER_ID),
-      'import.meta.env.VITE_META_WABA_ID': JSON.stringify(env.META_WABA_ID),
-      'import.meta.env.VITE_META_APP_ID': JSON.stringify(env.META_APP_ID),
+      'import.meta.env.VITE_META_ACCESS_TOKEN': JSON.stringify(env.VITE_META_ACCESS_TOKEN || env.META_ACCESS_TOKEN),
+      'import.meta.env.VITE_META_PHONE_NUMBER_ID': JSON.stringify(env.VITE_META_PHONE_NUMBER_ID || env.META_PHONE_NUMBER_ID),
+      'import.meta.env.VITE_META_WABA_ID': JSON.stringify(env.VITE_META_WABA_ID || env.META_WABA_ID),
+      'import.meta.env.VITE_META_APP_ID': JSON.stringify(env.VITE_META_APP_ID || env.META_APP_ID),
     },
     resolve: {
       alias: {

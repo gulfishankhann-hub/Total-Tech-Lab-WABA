@@ -10,5 +10,5 @@ services:
         - VITE_META_WABA_ID=${VITE_META_WABA_ID}
         - VITE_META_APP_ID=${VITE_META_APP_ID}
     ports:
-      - "3000:3000"
+      - "3001:3000"
     restart: unless-stopped
