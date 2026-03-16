@@ -1443,8 +1443,15 @@ function ProfileSection({ isDark }: { isDark: boolean }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Use environment variables instead of hardcoded values
-  const TARGET_WABA_ID = import.meta.env.VITE_META_WABA_ID || "";
-  const TARGET_PHONE = import.meta.env.VITE_META_PHONE_NUMBER_ID || "";
+  const getEnv = (key: string) => {
+    if (typeof window !== 'undefined' && (window as any).__ENV__ && (window as any).__ENV__[key]) {
+      return (window as any).__ENV__[key];
+    }
+    return import.meta.env[key] || '';
+  };
+
+  const TARGET_WABA_ID = getEnv('VITE_META_WABA_ID');
+  const TARGET_PHONE = getEnv('VITE_META_PHONE_NUMBER_ID');
 
   useEffect(() => {
     async function loadProfileData() {

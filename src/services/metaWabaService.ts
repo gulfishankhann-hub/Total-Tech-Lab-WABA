@@ -6,14 +6,26 @@
 import { db, auth } from '../firebase';
 import { collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, query, where, orderBy, serverTimestamp, deleteDoc } from 'firebase/firestore';
 
-const META_ACCESS_TOKEN = import.meta.env.VITE_META_ACCESS_TOKEN || '';
-const META_PHONE_NUMBER_ID = import.meta.env.VITE_META_PHONE_NUMBER_ID || '';
-const META_WABA_ID = import.meta.env.VITE_META_WABA_ID || '';
+const getEnv = (key: string) => {
+  if (typeof window !== 'undefined' && (window as any).__ENV__ && (window as any).__ENV__[key]) {
+    return (window as any).__ENV__[key];
+  }
+  return import.meta.env[key] || '';
+};
+
+const getMetaConfig = () => ({
+  META_ACCESS_TOKEN: getEnv('VITE_META_ACCESS_TOKEN'),
+  META_PHONE_NUMBER_ID: getEnv('VITE_META_PHONE_NUMBER_ID'),
+  META_WABA_ID: getEnv('VITE_META_WABA_ID'),
+  META_APP_ID: getEnv('VITE_META_APP_ID'),
+});
+
 const META_API_VERSION = 'v19.0';
 const META_BASE_URL = `https://graph.facebook.com/${META_API_VERSION}`;
 
 export const metaWabaService = {
   async getTemplates() {
+    const { META_ACCESS_TOKEN, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_WABA_ID) {
       console.warn('Meta API not configured. Returning mock templates.');
       return this.getMockTemplates();
@@ -47,6 +59,7 @@ export const metaWabaService = {
   },
 
   async createTemplate(templateData: any) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_WABA_ID) return { success: false, error: 'API not configured' };
     try {
       const url = `${META_BASE_URL}/${META_WABA_ID}/message_templates`;
@@ -80,6 +93,7 @@ export const metaWabaService = {
   },
 
   async sendTemplateMessage(phone: string, templateName: string, languageCode: string = 'en', components: any[] = []) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return { success: false, error: 'API not configured' };
     try {
       const url = `${META_BASE_URL}/${META_PHONE_NUMBER_ID}/messages`;
@@ -133,6 +147,7 @@ export const metaWabaService = {
   },
 
   async sendTextMessage(phone: string, text: string) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return false;
     try {
       const url = `${META_BASE_URL}/${META_PHONE_NUMBER_ID}/messages`;
@@ -296,6 +311,7 @@ export const metaWabaService = {
   },
 
   async getAccountInfo() {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) {
       return { 
         status: 'Disconnected', 
@@ -355,6 +371,7 @@ export const metaWabaService = {
   },
 
   async getPhoneNumbers() {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_WABA_ID) return [];
     try {
       const url = `${META_BASE_URL}/${META_WABA_ID}/phone_numbers`;
@@ -389,6 +406,7 @@ export const metaWabaService = {
   },
 
   async getPhoneNumberDetail(wabaId: string, phoneNumber: string) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return null;
     try {
       const url = `${META_BASE_URL}/${META_PHONE_NUMBER_ID}`;
@@ -406,6 +424,7 @@ export const metaWabaService = {
   },
 
   async getBusinessProfileAbout(wabaId: string, phoneNumber: string) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return null;
     try {
       const url = `${META_BASE_URL}/${META_PHONE_NUMBER_ID}/whatsapp_business_profile?fields=about,address,description,email,profile_picture_url,websites,vertical`;
@@ -424,6 +443,7 @@ export const metaWabaService = {
   },
 
   async updateBusinessProfile(wabaId: string, phoneNumber: string, data: any) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return null;
     try {
       const url = `${META_BASE_URL}/${META_PHONE_NUMBER_ID}/whatsapp_business_profile`;
@@ -451,6 +471,7 @@ export const metaWabaService = {
   },
 
   async updateBusinessProfilePhoto(wabaId: string, phoneNumber: string, file: File) {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_PHONE_NUMBER_ID) return null;
     try {
       // Meta API requires uploading the file via Resumable Upload API first,
@@ -466,6 +487,7 @@ export const metaWabaService = {
   },
 
   async getBusinessAccounts() {
+    const { META_ACCESS_TOKEN, META_PHONE_NUMBER_ID, META_WABA_ID } = getMetaConfig();
     if (!META_ACCESS_TOKEN || !META_WABA_ID) return [];
     try {
       const url = `${META_BASE_URL}/${META_WABA_ID}`;
