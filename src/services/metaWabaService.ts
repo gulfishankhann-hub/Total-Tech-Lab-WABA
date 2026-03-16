@@ -359,6 +359,7 @@ export const metaWabaService = {
   },
 
   async getChannels() {
+    const { META_PHONE_NUMBER_ID } = getMetaConfig();
     const info = await this.getAccountInfo();
     if (info.status === 'Connected') {
       return [{
